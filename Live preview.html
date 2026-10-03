@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Blinkit · Sales &amp; Outlet Performance — Live Dashboard</title>
+<style>
+/* ============================================================
+   THEME TOKENS
+   ============================================================ */
+:root{
+  --bg:#0a0d13;
+  --panel-a:#141b29;
+  --panel-b:#0f1521;
+  --line:rgba(255,255,255,.07);
+  --txt:#e9edf5;
+  --muted:#8b95ab;
+  --yellow:#f8cb46;
+  --yellow-2:#ffe27a;
+  --green:#54b226;
+  --green-d:#0c831f;
+  --radius:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--txt);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(900px 520px at 6% -12%, rgba(248,203,70,.10), transparent 62%),
+    radial-gradient(820px 520px at 102% -4%, rgba(84,178,38,.11), transparent 58%),
+    radial-gradient(760px 620px at 50% 122%, rgba(248,203,70,.05), transparent 62%);
+  background-attachment:fixed;
+  padding-bottom:28px;
+}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:#0c111a}
+::-webkit-scrollbar-thumb{background:#242e40;border-radius:20px;border:2px solid #0c111a}
+::-webkit-scrollbar-thumb:hover{background:#33405a}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.topbar{
+  display:flex;align-items:center;gap:20px;
+  padding:20px 28px 16px;
+  flex-wrap:wrap;
+}
+.brand{
+  display:flex;align-items:center;gap:9px;
+  background:linear-gradient(140deg,#ffd95e,#f8cb46 55%,#efb92c);
+  padding:9px 18px 10px;border-radius:14px;
+  box-shadow:0 10px 30px rgba(248,203,70,.28), inset 0 1px 0 rgba(255,255,255,.5);
+}
+.brand .bolt{width:22px;height:22px;fill:#0c831f}
+.brand .word{
+  font-size:25px;font-weight:900;color:#0c831f;letter-spacing:-1.2px;line-height:1;
+  font-family:'Inter',sans-serif;
+}
+.titles{flex:1;min-width:240px}
+.titles h1{
+  font-size:20px;font-weight:800;letter-spacing:-.4px;
+  background:linear-gradient(90deg,#fff,#f8cb46 70%,#54b226);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.titles p{font-size:12px;color:var(--muted);margin-top:3px;letter-spacing:.2px}
+.top-right{display:flex;align-items:center;gap:12px}
+.live{
+  display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:1.4px;
+  color:#7ee24a;background:rgba(84,178,38,.12);border:1px solid rgba(84,178,38,.35);
+  padding:7px 13px;border-radius:30px;
+}
+.live i{width:7px;height:7px;border-radius:50%;background:#7ee24a;box-shadow:0 0 10px #7ee24a;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
+.ghost-btn{
+  background:#121a28;border:1px solid var(--line);color:#cfd6e4;
+  padding:9px 16px;border-radius:11px;font-size:12.5px;font-weight:700;cursor:pointer;
+  transition:.22s;font-family:inherit;
+}
+.ghost-btn:hover{border-color:rgba(248,203,70,.55);color:var(--yellow);background:rgba(248,203,70,.07)}
+
+/* ============================================================
+   FILTER BAR / SLICERS
+   ============================================================ */
+.filterbar{
+  display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+  padding:0 28px 18px;
+}
+.filterbar .fb-title{
+  font-size:11px;font-weight:800;letter-spacing:1.5px;color:var(--muted);
+  text-transform:uppercase;margin-right:2px;
+}
+.slicer{position:relative}
+.sl-btn{
+  display:flex;align-items:center;gap:9px;
+  background:#121a28;border:1px solid var(--line);color:var(--txt);
+  padding:10px 14px;border-radius:11px;font-size:12.5px;font-weight:650;cursor:pointer;
+  transition:.2s;font-family:inherit;white-space:nowrap;
+}
+.sl-btn:hover{border-color:rgba(248,203,70,.4);background:#16202f}
+.slicer.on .sl-btn{border-color:rgba(248,203,70,.65);background:rgba(248,203,70,.09);color:var(--yellow)}
+.sl-count{
+  font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:20px;
+  background:rgba(255,255,255,.07);color:#9aa5ba;
+}
+.slicer.on .sl-count{background:var(--yellow);color:#0c111a}
+.sl-btn .chev{transition:transform .25s;opacity:.7}
+.slicer.open .sl-btn .chev{transform:rotate(180deg)}
+.sl-menu{
+  position:absolute;top:calc(100% + 9px);left:0;min-width:245px;max-height:290px;overflow:auto;
+  background:#0f1622;border:1px solid rgba(255,255,255,.1);border-radius:13px;padding:7px;
+  z-index:80;display:none;box-shadow:0 26px 60px rgba(0,0,0,.7);
+  animation:dropIn .18s ease;
+}
+@keyframes dropIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.slicer.open .sl-menu{display:block}
+.sl-item{
+  display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:9px;
+  cursor:pointer;font-size:12.5px;color:#c3cbdb;transition:.15s;
+}
+.sl-item:hover{background:rgba(255,255,255,.055);color:#fff}
+.sl-item input{
+  accent-color:var(--yellow);width:15px;height:15px;cursor:pointer;flex:0 0 auto;
+}
+
+/* ============================================================
+   KPI CARDS
+   ============================================================ */
+.kpis{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:16px;
+  padding:0 28px 18px;
+}
+.kpi{
+  position:relative;overflow:hidden;border-radius:var(--radius);
+  padding:17px 19px 18px;
+  background:linear-gradient(152deg,rgba(248,203,70,.15),rgba(84,178,38,.06) 58%,rgba(255,255,255,.01));
+  border:1px solid rgba(248,203,70,.17);
+  transition:border-color .25s, transform .25s, box-shadow .25s;
+}
+.kpi::after{
+  content:'';position:absolute;right:-38px;top:-38px;width:130px;height:130px;border-radius:50%;
+  background:radial-gradient(circle,rgba(248,203,70,.20),transparent 70%);pointer-events:none;
+}
+.kpi:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(0,0,0,.4)}
+.kpi.active{
+  border-color:rgba(248,203,70,.75);
+  box-shadow:0 0 0 1px rgba(248,203,70,.35), 0 14px 34px rgba(248,203,70,.13);
+}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.kpi-label{font-size:11px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:#a9b3c6}
+.kpi-ico{
+  width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
+  background:rgba(248,203,70,.14);border:1px solid rgba(248,203,70,.25);
+}
+.kpi-ico svg{width:15px;height:15px;stroke:var(--yellow);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.kpi-value{
+  font-size:33px;font-weight:850;letter-spacing:-1.4px;line-height:1.1;color:#fff;
+  font-variant-numeric:tabular-nums;
+}
+.kpi-sub{font-size:11.5px;color:var(--muted);margin-top:7px;letter-spacing:.15px}
+
+/* ============================================================
+   GRID + CARDS
+   ============================================================ */
+.grid{
+  display:grid;grid-template-columns:repeat(12,1fr);gap:16px;
+  padding:0 28px;
+}
+.card{
+  position:relative;overflow:hidden;border-radius:var(--radius);
+  background:linear-gradient(160deg,var(--panel-a) 0%,var(--panel-b) 100%);
+  border:1px solid var(--line);
+  padding:16px 18px 18px;
+  transition:border-color .28s, transform .28s, box-shadow .28s;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:12%;right:12%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(248,203,70,.45),transparent);
+  opacity:.65;
+}
+.card:hover{border-color:rgba(248,203,70,.22);transform:translateY(-2px);box-shadow:0 14px 34px rgba(0,0,0,.35)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.card-head h3{
+  font-size:12px;font-weight:800;letter-spacing:1.25px;text-transform:uppercase;color:#cbd4e3;
+  display:flex;align-items:center;gap:8px;
+}
+.card-head h3::before{
+  content:'';width:4px;height:14px;border-radius:4px;
+  background:linear-gradient(180deg,var(--yellow),var(--green));
+}
+.hint{font-size:11px;color:var(--muted);font-weight:500}
+
+.span4{grid-column:span 4}
+.span5{grid-column:span 5}
+.span7{grid-column:span 7}
+.span8{grid-column:span 8}
+.span12{grid-column:span 12}
+
+/* ============================================================
+   METRIC TABS
+   ============================================================ */
+.metric-tabs{display:flex;gap:5px;background:#0d1420;padding:4px;border-radius:11px;border:1px solid var(--line)}
+.metric-tabs button{
+  background:transparent;border:0;color:#8f9ab0;font-family:inherit;font-size:11.5px;font-weight:700;
+  padding:7px 12px;border-radius:8px;cursor:pointer;transition:.2s;white-space:nowrap;
+}
+.metric-tabs button:hover{color:#dfe6f2}
+.metric-tabs button.on{
+  background:linear-gradient(140deg,var(--yellow),#edb92c);color:#0c111a;
+  box-shadow:0 6px 16px rgba(248,203,70,.28);
+}
+
+/* ============================================================
+   HORIZONTAL BARS (HTML)
+   ============================================================ */
+.hbar{
+  display:grid;grid-template-columns:142px 1fr 86px;align-items:center;gap:11px;
+  padding:3.5px 0;
+}
+.hb-label{
+  font-size:12px;color:#b9c3d5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.hb-track{
+  height:12px;background:rgba(255,255,255,.05);border-radius:9px;overflow:hidden;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.4);
+}
+.hb-fill{
+  display:block;height:100%;width:var(--w);border-radius:9px;
+  background:linear-gradient(90deg,#2f7a17,#54b226);
+  transform-origin:left;animation:growX .85s cubic-bezier(.2,.85,.25,1) both;
+}
+.hb-fill.top{background:linear-gradient(90deg,#e0a91c,#ffd95e);box-shadow:0 0 14px rgba(248,203,70,.35)}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.hb-val{
+  font-size:12px;font-weight:750;color:#e7edf7;text-align:right;
+  font-variant-numeric:tabular-nums;
+}
+
+/* ============================================================
+   DONUT + LEGEND
+   ============================================================ */
+.donut-flex{display:flex;flex-direction:column;align-items:center;gap:14px;justify-content:center}
+.donut{width:100%;max-width:210px;height:auto;display:block;filter:drop-shadow(0 10px 26px rgba(0,0,0,.45))}
+.slice{transition:opacity .2s, transform .2s;transform-origin:center;cursor:pointer}
+.slice:hover{opacity:.82}
+.d-center{fill:#fff;font-size:17px;font-weight:850;text-anchor:middle;letter-spacing:-.5px}
+.d-sub{fill:#7d879b;font-size:8.5px;font-weight:800;letter-spacing:1.5px;text-anchor:middle}
+.legend{display:flex;flex-direction:column;gap:8px;width:100%}
+.lg{display:flex;align-items:center;gap:9px;font-size:12px}
+.lg .dot{width:9px;height:9px;border-radius:3px;flex:0 0 auto;box-shadow:0 0 10px rgba(255,255,255,.12)}
+.lg-label{color:#b9c3d5;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lg-val{color:#fff;font-weight:750;font-variant-numeric:tabular-nums}
+.lg-pct{color:var(--yellow);font-weight:750;font-size:11px;min-width:46px;text-align:right}
+
+/* ============================================================
+   SVG CHART BITS
+   ============================================================ */
+.chart-svg{width:100%;display:block;overflow:visible}
+.axis{fill:#6f7a90;font-size:10px;font-weight:600}
+.axis-x{fill:#8b95ab;font-size:10px;font-weight:700}
+.fn-t{fill:#0b0e13;font-size:11.5px;font-weight:800;text-anchor:middle;pointer-events:none}
+.dot{cursor:pointer;transition:r .18s}
+.dot:hover{r:6.5}
+
+/* ============================================================
+   GROUPED BARS (Fat by Outlet)
+   ============================================================ */
+.gb{margin-bottom:12px}
+.gb:last-child{margin-bottom:0}
+.gb-title{
+  font-size:11.5px;font-weight:800;color:#dbe3f0;letter-spacing:.6px;margin-bottom:6px;
+  display:flex;align-items:center;gap:7px;
+}
+.gb-title::before{
+  content:'';width:5px;height:5px;border-radius:50%;background:var(--yellow);
+  box-shadow:0 0 8px var(--yellow);
+}
+.gb-row{display:grid;grid-template-columns:62px 1fr 74px;align-items:center;gap:9px;padding:2.5px 0}
+.gb-key{font-size:11px;color:#8894a9}
+.gb-track{height:9px;background:rgba(255,255,255,.05);border-radius:8px;overflow:hidden}
+.gb-fill{display:block;height:100%;width:var(--w);border-radius:8px;transform-origin:left;animation:growX .85s cubic-bezier(.2,.85,.25,1) both}
+.gb-val{font-size:11px;font-weight:700;color:#dfe7f4;text-align:right;font-variant-numeric:tabular-nums}
+
+/* ============================================================
+   MATRIX TABLE
+   ============================================================ */
+.table-wrap{overflow-x:auto;border-radius:12px}
+table.mtx{width:100%;border-collapse:collapse;font-size:12.5px;min-width:720px}
+table.mtx thead th{
+  font-size:10.5px;font-weight:800;letter-spacing:1.1px;text-transform:uppercase;color:#8b95ab;
+  text-align:right;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.018);white-space:nowrap;
+}
+table.mtx thead th:first-child{text-align:left}
+table.mtx tbody td{
+  padding:12px 14px;text-align:right;border-bottom:1px solid rgba(255,255,255,.045);
+  color:#dbe3f0;font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+table.mtx tbody td:first-child{text-align:left;font-weight:750;color:#fff}
+table.mtx tbody tr{transition:background .18s}
+table.mtx tbody tr:hover{background:rgba(248,203,70,.045)}
+table.mtx tbody tr.total-row td{
+  border-top:1px solid rgba(248,203,70,.3);border-bottom:0;
+  background:rgba(248,203,70,.07);font-weight:800;color:var(--yellow);
+}
+.share-cell{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.share-bar{width:74px;height:4px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}
+.share-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--yellow));border-radius:4px}
+.share-txt{font-size:10px;color:var(--muted);font-weight:700}
+.pill{
+  display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:800;
+  font-variant-numeric:tabular-nums;
+}
+.pill.rate{background:rgba(248,203,70,.13);color:var(--yellow);border:1px solid rgba(248,203,70,.28)}
+.vis-cell{display:flex;align-items:center;justify-content:flex-end;gap:8px}
+.vis-bar{width:56px;height:5px;border-radius:5px;background:rgba(255,255,255,.08);overflow:hidden}
+.vis-bar i{display:block;height:100%;background:linear-gradient(90deg,#54b226,#8fd14f);border-radius:5px}
+.ot-tag{display:flex;align-items:center;gap:9px}
+.ot-dot{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+
+/* ============================================================
+   TOOLTIP
+   ============================================================ */
+.tip{
+  position:fixed;z-index:999;pointer-events:none;
+  background:rgba(12,17,26,.96);border:1px solid rgba(248,203,70,.35);
+  border-radius:10px;padding:8px 12px;font-size:11.5px;color:#e9edf5;
+  box-shadow:0 16px 40px rgba(0,0,0,.7);backdrop-filter:blur(8px);
+  display:flex;flex-direction:column;gap:3px;opacity:0;transform:translateY(4px);
+  transition:opacity .14s, transform .14s;white-space:nowrap;
+}
+.tip.show{opacity:1;transform:translateY(0)}
+.tip b{color:var(--yellow);font-size:12px;font-weight:800}
+.tip span{color:#c3cbdb;font-weight:600}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer{
+  text-align:center;font-size:11.5px;color:#5f6a80;padding:26px 28px 6px;letter-spacing:.3px;
+}
+.footer b{color:var(--yellow);font-weight:750}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1180px){
+  .span4,.span5,.span7,.span8{grid-column:span 12}
+  .kpis{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:700px){
+  .topbar{padding:16px 16px 12px}
+  .kpis{padding:0 16px 14px;gap:12px}
+  .grid{padding:0 16px;gap:14px}
+  .filterbar{padding:0 16px 14px}
+  .kpi-value{font-size:26px}
+  .hb-label{font-size:11px}
+  .hbar{grid-template-columns:110px 1fr 74px;gap:8px}
+  .titles h1{font-size:16px}
+  .brand .word{font-size:21px}
+}
+</style>
+</head>
+<body>
+
+<div id="tip" class="tip"></div>
+
+<div class="app">
+
+  <!-- ================= TOP BAR ================= -->
+  <header class="topbar">
+    <div class="brand">
+      <svg class="bolt" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M13.2 2 3.6 13.4a.6.6 0 0 0 .46.98h5.2l-1.06 7.2a.6.6 0 0 0 1.06.48L19.9 10.6a.6.6 0 0 0-.46-.98h-5.2l1.02-7.14a.6.6 0 0 0-1.06-.48z"/>
+      </svg>
+      <span class="word">blinkit</span>
+    </div>
+    <div class="titles">
+      <h1>Sales &amp; Outlet Performance</h1>
+      <p>India's Last Minute App · Power BI Business Intelligence Dashboard</p>
+    </div>
+    <div class="top-right">
+      <span class="live"><i></i>LIVE</span>
+      <button class="ghost-btn" id="resetBtn">Reset filters</button>
+    </div>
+  </header>
+
+  <!-- ================= FILTERS ================= -->
+  <section class="filterbar" id="filterbar">
+    <span class="fb-title">Filters</span>
+  </section>
+
+  <!-- ================= KPI CARDS ================= -->
+  <section class="kpis">
+    <div class="kpi" data-metric="sales">
+      <div class="kpi-top">
+        <span class="kpi-label">Total Sales</span>
+        <span class="kpi-ico">
+          <svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg>
+        </span>
+      </div>
+      <div class="kpi-value" id="kpiSales">$0</div>
+      <div class="kpi-sub">Overall revenue generated</div>
+    </div>
+
+    <div class="kpi" data-metric="avgsales">
+      <div class="kpi-top">
+        <span class="kpi-label">Avg Sales</span>
+        <span class="kpi-ico">
+          <svg viewBox="0 0 24 24"><path d="M4 20V10"/><path d="M10 20V4"/><path d="M16 20v-7"/><path d="M22 20H2"/></svg>
+        </span>
+      </div>
+      <div class="kpi-value" id="kpiAvg">$0</div>
+      <div class="kpi-sub">Average sales per transaction</div>
+    </div>
+
+    <div class="kpi" data-metric="items">
+      <div class="kpi-top">
+        <span class="kpi-label">No. of Items</span>
+        <span class="kpi-ico">
+          <svg viewBox="0 0 24 24"><path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></svg>
+        </span>
+      </div>
+      <div class="kpi-value" id="kpiItems">0</div>
+      <div class="kpi-sub">Items represented in the view</div>
+    </div>
+
+    <div class="kpi" data-metric="rating">
+      <div class="kpi-top">
+        <span class="kpi-label">Avg Rating</span>
+        <span class="kpi-ico">
+          <svg viewBox="0 0 24 24"><path d="M12 3l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8 6.2 20.9l1.1-6.5L2.6 9.8l6.5-.9L12 3z"/></svg>
+        </span>
+      </div>
+      <div class="kpi-value" id="kpiRating">0.0</div>
+      <div class="kpi-sub">Overall customer rating signal</div>
+    </div>
+  </section>
+
+  <!-- ================= CHART GRID ================= -->
+  <section class="grid">
+
+    <!-- Item Type -->
+    <div class="card span8">
+      <div class="card-head">
+        <h3>Sales by Item Type</h3>
+        <div class="metric-tabs" id="metricTabs">
+          <button data-metric="sales" class="on">Total Sales</button>
+          <button data-metric="avgsales">Avg Sales</button>
+          <button data-metric="items">No. of Items</button>
+          <button data-metric="rating">Avg Rating</button>
+        </div>
+      </div>
+      <div id="itemTypeChart"></div>
+    </div>
+
+    <!-- Fat Content -->
+    <div class="card span4">
+      <div class="card-head">
+        <h3>Fat Content</h3>
+        <span class="hint">Sales share</span>
+      </div>
+      <div class="donut-flex">
+        <div id="fatDonut"></div>
+        <div class="legend" id="fatLegend"></div>
+      </div>
+    </div>
+
+    <!-- Establishment trend -->
+    <div class="card span12">
+      <div class="card-head">
+        <h3>Outlet Establishment Trend</h3>
+        <span class="hint">Total sales by outlet establishment year</span>
+      </div>
+      <div id="yearChart"></div>
+    </div>
+
+    <!-- Outlet Size -->
+    <div class="card span4">
+      <div class="card-head">
+        <h3>Outlet Size</h3>
+        <span class="hint">Sales share</span>
+      </div>
+      <div class="donut-flex">
+        <div id="sizeDonut"></div>
+        <div class="legend" id="sizeLegend"></div>
+      </div>
+    </div>
+
+    <!-- Outlet Location funnel -->
+    <div class="card span4">
+      <div class="card-head">
+        <h3>Outlet Location</h3>
+        <span class="hint">Sales by tier</span>
+      </div>
+      <div id="locFunnel"></div>
+    </div>
+
+    <!-- Fat by Outlet -->
+    <div class="card span4">
+      <div class="card-head">
+        <h3>Fat by Outlet</h3>
+        <span class="hint">Low Fat vs Regular</span>
+      </div>
+      <div id="fatByOutlet"></div>
+    </div>
+
+    <!-- Outlet Type Matrix -->
+    <div class="card span12">
+      <div class="card-head">
+        <h3>Outlet Type Performance</h3>
+        <span class="hint">Sales · Items · Avg Sales · Rating · Visibility</span>
+      </div>
+      <div class="table-wrap">
+        <table class="mtx" id="matrixTable"></table>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="footer">
+    Blinkit Analysis · Sales &amp; Outlet Performance · Built with HTML · CSS · JavaScript — <b>Live Interactive Preview</b>
+  </div>
+</div>
+
+<script>
+/* ============================================================================
+   1. CALIBRATED TARGETS  (taken from the project report)
+   ============================================================================ */
+const OUTLET_TYPES       = ['Grocery Store','Supermarket Type1','Supermarket Type2','Supermarket Type3'];
+const OUTLET_TYPE_SALES  = [151940, 787550, 131480, 130710];        // Σ = 1,201,680
+const OUTLET_TYPE_ITEMS  = [1083, 5577, 928, 935];                  // Σ = 8,523
+
+const SIZES       = ['Small','Medium','High'];
+const SIZE_SALES  = [248990, 507900, 444790];
+
+const LOCATIONS       = ['Tier 1','Tier 2','Tier 3'];
+const LOCATION_SALES  = [336400, 393150, 472130];
+
+const FATS       = ['Low Fat','Regular'];
+const FAT_SALES  = [425360, 776320];
+
+const ITEM_TYPES = ['Fruits & Vegetables','Snack Foods','Household','Frozen Foods','Dairy','Canned',
+                    'Baking Goods','Health & Hygiene','Meat','Soft Drinks','Breads','Hard Drinks',
+                    'Others','Starchy Foods','Breakfast','Seafood'];
+const ITEM_SALES = [172000,170000,138000,118000,100000,90000,82000,70000,60000,56000,41000,30000,24680,20000,18000,12000];
+
+const YEARS      = [2011,2012,2013,2014,2015,2016,2017,2018,2019,2020,2021,2022];
+const YEAR_SALES = [95000,58000,99000,97000,102000,96000,100000,168000,98000,95000,99000,94680];
+
+/* ============================================================================
+   2. SYNTHETIC ROW BUILDER  (Iterative Proportional Fitting)
+   --------------------------------------------------------------------------
+   Builds a 6-dimensional contingency table whose every 1-D marginal matches
+   the reported dashboard totals exactly, then flattens it into data rows.
+   ============================================================================ */
+const DIMS = [
+  { vals: OUTLET_TYPES, w: OUTLET_TYPE_SALES },
+  { vals: SIZES,        w: SIZE_SALES },
+  { vals: LOCATIONS,    w: LOCATION_SALES },
+  { vals: FATS,         w: FAT_SALES },
+  { vals: ITEM_TYPES,   w: ITEM_SALES },
+  { vals: YEARS,        w: YEAR_SALES }
+];
+const ND = DIMS.length;
+const SZ = DIMS.map(d => d.vals.length);
+const STRIDE = new Array(ND);
+let NCELL = 1;
+for (let i = ND - 1; i >= 0; i--) { STRIDE[i] = NCELL; NCELL *= SZ[i]; }
+
+/* deterministic pseudo-random */
+function rnd(i){ const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); }
+
+/* pre-computed value index per dimension per cell */
+const VIDX = DIMS.map((d, di) => {
+  const arr = new Uint8Array(NCELL), st = STRIDE[di], s = SZ[di];
+  for (let i = 0; i < NCELL; i++) arr[i] = Math.floor(i / st) % s;
+  return arr;
+});
+
+/* seed with mild structure */
+const cells = new Float64Array(NCELL);
+for (let i = 0; i < NCELL; i++) cells[i] = 0.7 + 0.9 * rnd(i + 1);
+
+/* IPF – 40 sweeps */
+for (let iter = 0; iter < 40; iter++) {
+  for (let d = 0; d < ND; d++) {
+    const vi = VIDX[d], s = SZ[d], tgt = DIMS[d].w;
+    const sums = new Float64Array(s);
+    for (let i = 0; i < NCELL; i++) sums[vi[i]] += cells[i];
+    const sc = new Float64Array(s);
+    for (let v = 0; v < s; v++) sc[v] = sums[v] > 0 ? tgt[v] / sums[v] : 0;
+    for (let i = 0; i < NCELL; i++) cells[i] *= sc[vi[i]];
+  }
+}
+
+/* flatten into rows */
+const DATA = [];
+const ITEM_FACTOR = OUTLET_TYPES.map((_, i) => OUTLET_TYPE_ITEMS[i] / OUTLET_TYPE_SALES[i]);
+
+for (let i = 0; i < NCELL; i++) {
+  const sales = cells[i];
+  if (sales <= 0) continue;
+  const ot  = VIDX[0][i], sz  = VIDX[1][i], loc = VIDX[2][i];
+  const fat = VIDX[3][i], it  = VIDX[4][i], yr  = VIDX[5][i];
+
+  /* rating distribution: 20% × 3 · 70% × 4 · 10% × 5  → mean 3.90 */
+  const r = rnd(i * 3.7 + 13.1);
+  const rating = r < 0.20 ? 3 : (r < 0.90 ? 4 : 5);
+
+  /* item visibility: base per outlet type with noise */
+  const baseVis = ot === 0 ? 0.10 : 0.06;
+  const vis = baseVis * (0.6 + 0.8 * rnd(i * 5.3 + 7.7));
+
+  DATA.push({
+    ot, sz, loc, fat, it, yr,
+    sales,
+    items: sales * ITEM_FACTOR[ot],
+    rating,
+    vis
+  });
+}
+
+/* ============================================================================
+   3. HELPERS
+   ============================================================================ */
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+function money(v){
+  if (v >= 1e6) return '$' + (v / 1e6).toFixed(2) + 'M';
+  if (v >= 1e3) return '$' + (v / 1e3).toFixed(2) + 'K';
+  return '$' + Math.round(v);
+}
+function money0(v){
+  if (v >= 1e6) return '$' + (v / 1e6).toFixed(1) + 'M';
+  if (v >= 1e3) return '$' + Math.round(v / 1e3) + 'K';
+  return '$' + Math.round(v);
+}
+function num(v){ return Math.round(v).toLocaleString('en-US'); }
+function usd(v){ return '$' + Math.round(v).toLocaleString('en-US'); }
+
+function polar(cx, cy, r, a){ return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; }
+function arcPath(cx, cy, r0, r1, a0, a1){
+  if (a1 - a0 <= 0.0005) return '';
+  const large = (a1 - a0) > Math.PI ? 1 : 0;
+  const [x0,y0] = polar(cx, cy, r1, a0), [x1,y1] = polar(cx, cy, r1, a1);
+  const [x2,y2] = polar(cx, cy, r0, a1), [x3,y3] = polar(cx, cy, r0, a0);
+  return `M${x0.toFixed(2)} ${y0.toFixed(2)}A${r1} ${r1} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}` +
+         `L${x2.toFixed(2)} ${y2.toFixed(2)}A${r0} ${r0} 0 ${large} 0 ${x3.toFixed(2)} ${y3.toFixed(2)}Z`;
+}
+function smoothPath(pts){
+  if (!pts.length) return '';
+  let d = `M${pts[0][0].toFixed(2)} ${pts[0][1].toFixed(2)}`;
+  for (let i = 0; i < pts.length - 1; i++){
+    const [x0,y0] = pts[i], [x1,y1] = pts[i+1];
+    const mx = (x0 + x1) / 2;
+    d += ` C${mx.toFixed(2)} ${y0.toFixed(2)} ${mx.toFixed(2)} ${y1.toFixed(2)} ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+  }
+  return d;
+}
+
+/* animated KPI counter */
+function animateVal(el, to, fmt){
+  const from = (el._val === undefined) ? 0 : el._val;
+  el._val = to;
+  if (Math.abs(to - from) < 1e-9) { el.textContent = fmt(to); return; }
+  const t0 = performance.now(), dur = 520;
+  function step(t){
+    const p = Math.min(1, (t - t0) / dur);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(from + (to - from) * e);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+/* ============================================================================
+   4. STATE
+   ============================================================================ */
+const state = {
+  loc: new Set(),
+  sz:  new Set(),
+  it:  new Set(),
+  ot:  new Set(),
+  metric: 'sales'
+};
+
+const SLICERS = [
+  { key:'loc', label:'Outlet Location Type', vals: LOCATIONS },
+  { key:'sz',  label:'Outlet Size',          vals: SIZES },
+  { key:'it',  label:'Item Type',            vals: ITEM_TYPES },
+  { key:'ot',  label:'Outlet Type',          vals: OUTLET_TYPES }
+];
+
+/* ============================================================================
+   5. FILTER + AGGREGATE
+   ============================================================================ */
+function currentRows(){
+  const { loc, sz, it, ot } = state;
+  if (!loc.size && !sz.size && !it.size && !ot.size) return DATA;
+  return DATA.filter(r =>
+    (!loc.size || loc.has(r.loc)) &&
+    (!sz.size  || sz.has(r.sz))   &&
+    (!it.size  || it.has(r.it))   &&
+    (!ot.size  || ot.has(r.ot))
+  );
+}
+
+function aggregate(rows){
+  const A = {
+    sales: 0, items: 0, ratingSum: 0, cnt: 0,
+    fat:  FATS.map(() => 0),
+    size: SIZES.map(() => 0),
+    loc:  LOCATIONS.map(() => 0),
+    ot:   OUTLET_TYPES.map(() => ({ sales:0, items:0, ratingSum:0, cnt:0, vis:0 })),
+    it:   ITEM_TYPES.map(() => ({ sales:0, items:0, ratingSum:0, cnt:0 })),
+    yr:   YEARS.map(() => 0),
+    fatByLoc: LOCATIONS.map(() => FATS.map(() => 0))
+  };
+
+  for (let k = 0; k < rows.length; k++){
+    const r = rows[k];
+    A.sales += r.sales;
+    A.items += r.items;
+    A.ratingSum += r.rating;
+    A.cnt++;
+
+    A.fat[r.fat]   += r.sales;
+    A.size[r.sz]   += r.sales;
+    A.loc[r.loc]   += r.sales;
+    A.fatByLoc[r.loc][r.fat] += r.sales;
+
+    const o = A.ot[r.ot];
+    o.sales += r.sales; o.items += r.items; o.ratingSum += r.rating; o.cnt++; o.vis += r.vis;
+
+    const t = A.it[r.it];
+    t.sales += r.sales; t.items += r.items; t.ratingSum += r.rating; t.cnt++;
+
+    A.yr[r.yr] += r.sales;
+  }
+  return A;
+}
+
+/* ============================================================================
+   6. RENDERERS
+   ============================================================================ */
+const COL = {
+  yellow:'#f8cb46',
+  yellow2:'#ffe27a',
+  green:'#54b226',
+  greenL:'#8fd14f',
+  blue:'#2ea3f2',
+  slate:'#7f8ca3',
+  orange:'#ff8a4c',
+  purple:'#a78bfa'
+};
+
+/* ---------- KPI ---------- */
+function renderKPIs(A){
+  const avgSales  = A.items ? A.sales / A.items : 0;
+  const avgRating = A.cnt ? A.ratingSum / A.cnt : 0;
+
+  animateVal(document.getElementById('kpiSales'),  A.sales,     v => money(v));
+  animateVal(document.getElementById('kpiAvg'),    avgSales,    v => '$' + Math.round(v));
+  animateVal(document.getElementById('kpiItems'),  A.items,     v => num(v));
+  animateVal(document.getElementById('kpiRating'), avgRating,   v => v.toFixed(1));
+
+  document.querySelectorAll('.kpi').forEach(k => {
+    k.classList.toggle('active', k.dataset.metric === state.metric);
+  });
+}
+
+/* ---------- DONUT ---------- */
+function donutHTML(slices, size){
+  const total = slices.reduce((a, b) => a + b.value, 0) || 1;
+  const cx = size / 2, cy = size / 2, R = size / 2 - 6, r0 = R * 0.63;
+  let ang = -Math.PI / 2, paths = '';
+
+  slices.forEach(s => {
+    const span = (s.value / total) * Math.PI * 2;
+    const gap = span > 0.09 ? 0.022 : 0;
+    paths += `<path class="slice" d="${arcPath(cx, cy, r0, R, ang + gap/2, ang + span - gap/2)}"
+                fill="${s.color}"
+                data-tip="${esc(s.label)}|${money(s.value)}|${(s.value/total*100).toFixed(1)}% of sales"/>`;
+    ang += span;
+  });
+
+  return `<svg viewBox="0 0 ${size} ${size}" class="donut">
+    ${paths}
+    <text x="${cx}" y="${cy - 1}" class="d-center">${money(total)}</text>
+    <text x="${cx}" y="${cy + 15}" class="d-sub">TOTAL SALES</text>
+  </svg>`;
+}
+
+function legendHTML(slices){
+  const total = slices.reduce((a, b) => a + b.value, 0) || 1;
+  return slices.map(s => `
+    <div class="lg">
+      <span class="dot" style="background:${s.color}"></span>
+      <span class="lg-label">${esc(s.label)}</span>
+      <span class="lg-val">${money(s.value)}</span>
+      <span class="lg-pct">${(s.value/total*100).toFixed(1)}%</span>
+    </div>`).join('');
+}
+
+function renderFatDonut(A){
+  const slices = [
+    { label:'Low Fat',  value:A.fat[0], color:COL.yellow },
+    { label:'Regular',  value:A.fat[1], color:COL.green }
+  ];
+  document.getElementById('fatDonut').innerHTML  = donutHTML(slices, 200);
+  document.getElementById('fatLegend').innerHTML = legendHTML(slices);
+}
+
+function renderSizeDonut(A){
+  const slices = [
+    { label:'Small',  value:A.size[0], color:COL.slate },
+    { label:'Medium', value:A.size[1], color:COL.yellow },
+    { label:'High',   value:A.size[2], color:COL.green }
+  ];
+  document.getElementById('sizeDonut').innerHTML  = donutHTML(slices, 200);
+  document.getElementById('sizeLegend').innerHTML = legendHTML(slices);
+}
+
+/* ---------- ITEM TYPE BARS ---------- */
+function renderItemType(A){
+  const host = document.getElementById('itemTypeChart');
+  const metric = state.metric;
+
+  const rows = ITEM_TYPES.map((t, i) => {
+    const d = A.it[i];
+    let value, disp;
+    if (metric === 'sales')      { value = d.sales; disp = money(d.sales); }
+    else if (metric === 'items') { value = d.items; disp = num(d.items); }
+    else if (metric === 'avgsales') { value = d.items ? d.sales / d.items : 0; disp = usd(value); }
+    else { value = d.cnt ? d.ratingSum / d.cnt : 0; disp = value.toFixed(2); }
+    return { label:t, value, disp, sales:d.sales };
+  }).sort((a, b) => b.sales - a.sales);
+
+  const maxVal = Math.max(...rows.map(r => r.value), 1e-9);
+  const scaleMax = (metric === 'rating') ? 5 : maxVal;
+
+  host.innerHTML = rows.map((r, idx) => {
+    const w = Math.max(1.5, (r.value / scaleMax) * 100);
+    const isTop = idx === 0;
+    const tipVal = (metric === 'items') ? r.disp : (metric === 'rating' ? r.value.toFixed(2) : r.disp);
+    return `<div class="hbar">
+      <span class="hb-label" title="${esc(r.label)}">${esc(r.label)}</span>
+      <span class="hb-track">
+        <i class="hb-fill${isTop ? ' top' : ''}" style="--w:${w.toFixed(2)}%"
+           data-tip="${esc(r.label)}|${tipVal}|Sales ${money(r.sales)}"></i>
+      </span>
+      <span class="hb-val">${r.disp}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ---------- ESTABLISHMENT LINE ---------- */
+function renderYear(A){
+  const host = document.getElementById('yearChart');
+  const w = Math.max(520, host.clientWidth || 900);
+  const h = 268;
+  const values = A.yr;
+  const maxV = Math.max(...values) * 1.20 || 1;
+
+  const padL = 58, padR = 18, padT = 20, padB = 32;
+  const iw = w - padL - padR;
+  const ih = h - padT - padB;
+
+  const pts = values.map((v, i) => {
+    const x = padL + (i / (values.length - 1)) * iw;
+    const y = padT + ih - (v / maxV) * ih;
+    return [x, y];
+  });
+
+  let grid = '';
+  for (let g = 0; g <= 4; g++){
+    const y = padT + ih - (g / 4) * ih;
+    grid += `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${w - padR}" y2="${y.toFixed(1)}"
+               stroke="rgba(255,255,255,.06)" stroke-width="1"/>`;
+    grid += `<text x="${padL - 11}" y="${(y + 4).toFixed(1)}" text-anchor="end" class="axis">${money0(maxV * g / 4)}</text>`;
+  }
+
+  const linePath = smoothPath(pts);
+  const areaPath = `${linePath} L${pts[pts.length-1][0].toFixed(2)} ${(padT + ih).toFixed(2)} L${pts[0][0].toFixed(2)} ${(padT + ih).toFixed(2)} Z`;
+
+  let xLabels = '', dots = '';
+  pts.forEach((p, i) => {
+    xLabels += `<text x="${p[0].toFixed(1)}" y="${h - 8}" text-anchor="middle" class="axis-x">${YEARS[i]}</text>`;
+    dots += `<circle class="dot" cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="4"
+               fill="#0b0e13" stroke="${COL.yellow}" stroke-width="2.4"
+               data-tip="${YEARS[i]}|${money(values[i])}|${((values[i]/(A.sales||1))*100).toFixed(1)}% of view"/>`;
+  });
+
+  host.innerHTML = `
+  <svg viewBox="0 0 ${w} ${h}" class="chart-svg" preserveAspectRatio="none" style="height:${h}px">
+    <defs>
+      <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"   stop-color="#f8cb46" stop-opacity="0.42"/>
+        <stop offset="55%"  stop-color="#f8cb46" stop-opacity="0.10"/>
+        <stop offset="100%" stop-color="#54b226" stop-opacity="0.02"/>
+      </linearGradient>
+      <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%"   stop-color="#54b226"/>
+        <stop offset="55%"  stop-color="#c8dd3f"/>
+        <stop offset="100%" stop-color="#f8cb46"/>
+      </linearGradient>
+    </defs>
+    ${grid}
+    <path d="${areaPath}" fill="url(#areaGrad)"/>
+    <path d="${linePath}" fill="none" stroke="url(#lineGrad)" stroke-width="3"
+          stroke-linecap="round" stroke-linejoin="round"
+          style="stroke-dasharray:4000;stroke-dashoffset:4000;animation:draw 1.3s ease forwards"/>
+    ${dots}
+    ${xLabels}
+  </svg>
+  <style>@keyframes draw{to{stroke-dashoffset:0}}</style>`;
+}
+
+/* ---------- LOCATION FUNNEL ---------- */
+function renderLocationFunnel(A){
+  const host = document.getElementById('locFunnel');
+  const w = Math.max(260, host.clientWidth || 320);
+  const h = 226;
+
+  const items = LOCATIONS.map((l, i) => ({ label:l, value:A.loc[i] }))
+                         .sort((a, b) => b.value - a.value);
+  const max = items[0].value || 1;
+  const colors = [COL.yellow, COL.greenL, COL.green];
+
+  const segH = h / items.length;
+  let out = '';
+
+  items.forEach((d, i) => {
+    const tw = (d.value / max) * (w * 0.88);
+    const nxt = items[i + 1] ? items[i + 1].value : d.value * 0.68;
+    const bw = (nxt / max) * (w * 0.88);
+    const cx = w / 2;
+    const y0 = i * segH + 2;
+    const y1 = (i + 1) * segH - 6;
+    const ptsArr = `${(cx - tw/2).toFixed(1)},${y0.toFixed(1)} ${(cx + tw/2).toFixed(1)},${y0.toFixed(1)} ${(cx + bw/2).toFixed(1)},${y1.toFixed(1)} ${(cx - bw/2).toFixed(1)},${y1.toFixed(1)}`;
+
+    out += `<polygon points="${ptsArr}" fill="${colors[i]}" opacity="0.94"
+              data-tip="${esc(d.label)}|${money(d.value)}|${((d.value/(A.sales||1))*100).toFixed(1)}% of view"/>`;
+    out += `<text x="${cx}" y="${((y0 + y1)/2 + 5).toFixed(1)}" class="fn-t">${esc(d.label)} · ${money(d.value)}</text>`;
+  });
+
+  host.innerHTML = `<svg viewBox="0 0 ${w} ${h}" class="chart-svg" style="height:${h}px">
+    <defs><filter id="fnGlow"><feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity=".45"/></filter></defs>
+    <g filter="url(#fnGlow)">${out}</g>
+  </svg>`;
+}
+
+/* ---------- FAT BY OUTLET ---------- */
+function renderFatByOutlet(A){
+  const host = document.getElementById('fatByOutlet');
+  const order = LOCATIONS.map((l, i) => ({ l, i, total:A.loc[i] }))
+                         .sort((a, b) => b.total - a.total);
+  const flatMax = Math.max(...A.fatByLoc.flat(), 1);
+
+  host.innerHTML = order.map(o => {
+    const low = A.fatByLoc[o.i][0], reg = A.fatByLoc[o.i][1];
+    return `<div class="gb">
+      <div class="gb-title">${esc(o.l)}</div>
+      <div class="gb-row">
+        <span class="gb-key">Low Fat</span>
+        <span class="gb-track"><i class="gb-fill" style="--w:${(low/flatMax*100).toFixed(2)}%;background:linear-gradient(90deg,#d8a91f,#f8cb46)"
+          data-tip="Low Fat · ${esc(o.l)}|${money(low)}|${((low/(low+reg||1))*100).toFixed(1)}% of tier"></i></span>
+        <span class="gb-val">${money(low)}</span>
+      </div>
+      <div class="gb-row">
+        <span class="gb-key">Regular</span>
+        <span class="gb-track"><i class="gb-fill" style="--w:${(reg/flatMax*100).toFixed(2)}%;background:linear-gradient(90deg,#2f7a17,#54b226)"
+          data-tip="Regular · ${esc(o.l)}|${money(reg)}|${((reg/(low+reg||1))*100).toFixed(1)}% of tier"></i></span>
+        <span class="gb-val">${money(reg)}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ---------- OUTLET TYPE MATRIX ---------- */
+function renderMatrix(A){
+  const table = document.getElementById('matrixTable');
+  const rows = OUTLET_TYPES.map((t, i) => {
+    const d = A.ot[i];
+    return {
+      name: t,
+      sales: d.sales,
+      items: d.items,
+      avg: d.items ? d.sales / d.items : 0,
+      rating: d.cnt ? d.ratingSum / d.cnt : 0,
+      vis: d.cnt ? d.vis / d.cnt : 0
+    };
+  }).sort((a, b) => b.sales - a.sales);
+
+  const totalSales = A.sales || 1;
+  const totalItems = A.items || 1;
+  const totalRating = A.cnt ? A.ratingSum / A.cnt : 0;
+  const totalVis = A.cnt ? (A.ot.reduce((s, o) => s + o.vis, 0) / A.cnt) : 0;
+
+  const dots = ['#f8cb46','#54b226','#8fd14f','#2ea3f2'];
+
+  const body = rows.map((r, idx) => {
+    const share = (r.sales / totalSales) * 100;
+    return `<tr>
+      <td><span class="ot-tag"><span class="ot-dot" style="background:${dots[idx % dots.length]}"></span>${esc(r.name)}</span></td>
+      <td>
+        <div class="share-cell">
+          <span>${money(r.sales)}</span>
+          <span class="share-bar"><i style="width:${share.toFixed(1)}%"></i></span>
+          <span class="share-txt">${share.toFixed(1)}% share</span>
+        </div>
+      </td>
+      <td>${num(r.items)}</td>
+      <td>${usd(r.avg)}</td>
+      <td><span class="pill rate">${r.rating.toFixed(2)}</span></td>
+      <td>
+        <div class="vis-cell">
+          <span class="vis-bar"><i style="width:${Math.min(100, (r.vis / 0.11) * 100).toFixed(1)}%"></i></span>
+          <span>${r.vis.toFixed(2)}</span>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+
+  const totalRow = `<tr class="total-row">
+      <td>Total</td>
+      <td>${money(A.sales)}</td>
+      <td>${num(A.items)}</td>
+      <td>${usd(A.items ? A.sales / A.items : 0)}</td>
+      <td>${totalRating.toFixed(2)}</td>
+      <td>${totalVis.toFixed(2)}</td>
+    </tr>`;
+
+  table.innerHTML = `
+    <thead>
+      <tr>
+        <th>Outlet Type</th>
+        <th>Total Sales</th>
+        <th>No. of Items</th>
+        <th>Avg Sales</th>
+        <th>Avg Rating</th>
+        <th>Item Visibility</th>
+      </tr>
+    </thead>
+    <tbody>${body}${totalRow}</tbody>`;
+}
+
+/* ============================================================================
+   7. MASTER RENDER
+   ============================================================================ */
+function render(){
+  const rows = currentRows();
+  const A = aggregate(rows);
+  renderKPIs(A);
+  renderItemType(A);
+  renderFatDonut(A);
+  renderSizeDonut(A);
+  renderYear(A);
+  renderLocationFunnel(A);
+  renderFatByOutlet(A);
+  renderMatrix(A);
+}
+
+/* ============================================================================
+   8. SLICERS
+   ============================================================================ */
+function buildSlicers(){
+  const bar = document.getElementById('filterbar');
+
+  bar.insertAdjacentHTML('beforeend', SLICERS.map(s => `
+    <div class="slicer" data-key="${s.key}">
+      <button class="sl-btn" type="button">
+        <span class="sl-label">${esc(s.label)}</span>
+        <span class="sl-count">All</span>
+        <svg class="chev" viewBox="0 0 24 24" width="12" height="12">
+          <path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.4"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="sl-menu">
+        ${s.vals.map((v, i) => `
+          <label class="sl-item">
+            <input type="checkbox" data-key="${s.key}" value="${i}">
+            <span>${esc(v)}</span>
+          </label>`).join('')}
+      </div>
+    </div>`).join(''));
+
+  /* toggle dropdowns */
+  bar.querySelectorAll('.sl-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const sl = btn.closest('.slicer');
+      const wasOpen = sl.classList.contains('open');
+      bar.querySelectorAll('.slicer').forEach(x => x.classList.remove('open'));
+      if (!wasOpen) sl.classList.add('open');
+    });
+  });
+  bar.querySelectorAll('.sl-menu').forEach(m => m.addEventListener('click', e => e.stopPropagation()));
+
+  /* checkbox changes */
+  bar.querySelectorAll('input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const set = state[cb.dataset.key];
+      const v = Number(cb.value);
+      if (cb.checked) set.add(v); else set.delete(v);
+      updateSlicerLabels();
+      render();
+    });
+  });
+}
+
+function updateSlicerLabels(){
+  document.querySelectorAll('.slicer').forEach(sl => {
+    const key = sl.dataset.key;
+    const n = state[key].size;
+    sl.classList.toggle('on', n > 0);
+    sl.querySelector('.sl-count').textContent = n === 0 ? 'All' : n + ' sel.';
+  });
+}
+
+function resetAll(){
+  ['loc','sz','it','ot'].forEach(k => state[k].clear());
+  document.querySelectorAll('.sl-menu input[type=checkbox]').forEach(cb => cb.checked = false);
+  updateSlicerLabels();
+  render();
+}
+
+/* ============================================================================
+   9. METRIC TABS + TOOLTIP + EVENTS
+   ============================================================================ */
+function initMetricTabs(){
+  const tabs = document.getElementById('metricTabs');
+  tabs.addEventListener('click', e => {
+    const btn = e.target.closest('button[data-metric]');
+    if (!btn) return;
+    state.metric = btn.dataset.metric;
+    tabs.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+    render();
+  });
+}
+
+function initTooltip(){
+  const tip = document.getElementById('tip');
+  document.addEventListener('mousemove', e => {
+    const t = e.target.closest('[data-tip]');
+    if (!t){ tip.classList.remove('show'); return; }
+    const parts = (t.getAttribute('data-tip') || '').split('|');
+    tip.innerHTML = `<b>${parts[0] || ''}</b>` +
+                    (parts[1] ? `<span>${parts[1]}</span>` : '') +
+                    (parts[2] ? `<span>${parts[2]}</span>` : '');
+    tip.classList.add('show');
+    const pad = 16;
+    let x = e.clientX + pad, y = e.clientY + pad;
+    const r = tip.getBoundingClientRect();
+    if (x + r.width > window.innerWidth - 10)  x = e.clientX - r.width - pad;
+    if (y + r.height > window.innerHeight - 10) y = e.clientY - r.height - pad;
+    tip.style.left = x + 'px';
+    tip.style.top  = y + 'px';
+  });
+  document.addEventListener('mouseleave', () => tip.classList.remove('show'));
+}
+
+function initGlobalEvents(){
+  document.addEventListener('click', () => {
+    document.querySelectorAll('.slicer').forEach(x => x.classList.remove('open'));
+  });
+  document.getElementById('resetBtn').addEventListener('click', resetAll);
+
+  let rt;
+  window.addEventListener('resize', () => {
+    clearTimeout(rt);
+    rt = setTimeout(render, 160);
+  });
+}
+
+/* ============================================================================
+   10. BOOT
+   ============================================================================ */
+(function init(){
+  buildSlicers();
+  initMetricTabs();
+  initTooltip();
+  initGlobalEvents();
+  updateSlicerLabels();
+  render();
+
+  /* re-render once fonts/layout settle */
+  window.addEventListener('load', () => setTimeout(render, 90));
+})();
+</script>
+</body>
+</html>

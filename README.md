@@ -3,10 +3,6 @@
 </p>
 
 <h1 align="center">📊 Blinkit Sales & Outlet Performance Dashboard</h1>
-
-<div align="center">
-  <h2>📊 Blinkit Sales Analysis — Power BI Project</h2>
-  
   <p>
     <img src="https://img.shields.io/badge/TOOL-POWER%20BI-F2C94C?style=for-the-badge&logo=powerbi&logoColor=black" alt="Tool"/>
     <img src="https://img.shields.io/badge/LANGUAGE-DAX%20%7C%20POWER%20QUERY-00B4D8?style=for-the-badge&logo=microsoft&logoColor=white" alt="Language"/>

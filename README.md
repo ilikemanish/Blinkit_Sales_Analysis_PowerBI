@@ -13,7 +13,6 @@
     <img src="https://img.shields.io/badge/DOMAIN-QUICK%20COMMERCE-FF4B4B?style=for-the-badge&logo=shopify&logoColor=white" alt="Domain"/>
   </p>
 </div>
----
 
 ## 📌 Project Overview
 

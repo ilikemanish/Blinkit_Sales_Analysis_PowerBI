@@ -4,16 +4,6 @@
 
 <h1 align="center">📊 Blinkit Sales & Outlet Performance Dashboard</h1>
 
-<p align="center">
-  <b>Power BI Business Intelligence Project Report</b><br>
-  Prepared from the supplied PBIX model, project requirements and dashboard view
-</p>
-
----
-
-## 📌 Project Overview
-
-This project is a **Blinkit Sales Analysis Power BI Project** developed using **Microsoft Power BI**.
 <div align="center">
   <h2>📊 Blinkit Sales Analysis — Power BI Project</h2>
   
@@ -27,6 +17,14 @@ This project is a **Blinkit Sales Analysis Power BI Project** developed using **
     <img src="https://img.shields.io/badge/DOMAIN-QUICK%20COMMERCE-FF4B4B?style=for-the-badge&logo=shopify&logoColor=white" alt="Domain"/>
   </p>
 </div>
+---
+
+## 📌 Project Overview
+
+This project is a **Blinkit Sales Analysis Power BI Project** developed using **Microsoft Power BI**.
+The analysis explores Blinkit's grocery sales data to answer key business questions related to sales performance, outlet establishment, outlet size, outlet location, item types, fat content, and customer ratings. 
+
+The project demonstrates how Power BI can be used to transform raw grocery data into meaningful analytical insights and actionable business recommendations.
 
 
 ## 🎯 Project Objectives

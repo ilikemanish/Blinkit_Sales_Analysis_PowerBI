@@ -1,5 +1,3 @@
-# 🛒 Blinkit Sales Analysis — Power BI Project
-
 <p align="center">
   <img src="ICONS/blinkit_logo.png" alt="Blinkit Logo" width="300"/>
 </p>
@@ -16,12 +14,20 @@
 ## 📌 Project Overview
 
 This project is a **Blinkit Sales Analysis Power BI Project** developed using **Microsoft Power BI**.
+<div align="center">
+  <h2>📊 Blinkit Sales Analysis — Power BI Project</h2>
+  
+  <p>
+    <img src="https://img.shields.io/badge/TOOL-POWER%20BI-F2C94C?style=for-the-badge&logo=powerbi&logoColor=black" alt="Tool"/>
+    <img src="https://img.shields.io/badge/LANGUAGE-DAX%20%7C%20POWER%20QUERY-00B4D8?style=for-the-badge&logo=microsoft&logoColor=white" alt="Language"/>
+    <img src="https://img.shields.io/badge/PROJECT-DATA%20ANALYSIS-54B226?style=for-the-badge" alt="Project"/>
+  </p>
+  
+  <p>
+    <img src="https://img.shields.io/badge/DOMAIN-QUICK%20COMMERCE-FF4B4B?style=for-the-badge&logo=shopify&logoColor=white" alt="Domain"/>
+  </p>
+</div>
 
-The analysis explores Blinkit's grocery sales data to answer key business questions related to **sales performance, outlet establishment, outlet size, outlet location, item types, fat content, and customer ratings**.
-
-The project demonstrates how Power BI can be used to transform raw grocery data into meaningful analytical insights and actionable business recommendations.
-
----
 
 ## 🎯 Project Objectives
 

@@ -1,381 +1,401 @@
-🛡️ Prism Insurance Analysis Dashboard | SQL Server & Power BI
+<p align="center">  
+  <img src="ICONS/blinkit_logo.png" alt="Blinkit Logo" width="300"/>  
+</p>  <h1 align="center">📊 Blinkit Sales & Outlet Performance Dashboard</h1>  
+  <p>  
+    <img src="https://img.shields.io/badge/TOOL-POWER%20BI-F2C94C?style=for-the-badge&logo=powerbi&logoColor=black" alt="Tool"/>  
+    <img src="https://img.shields.io/badge/LANGUAGE-DAX%20%7C%20POWER%20QUERY-00B4D8?style=for-the-badge&logo=microsoft&logoColor=white" alt="Language"/>  
+    <img src="https://img.shields.io/badge/PROJECT-DATA%20ANALYSIS-54B226?style=for-the-badge" alt="Project"/>  
+  </p>    <p>  
+    <img src="https://img.shields.io/badge/DOMAIN-QUICK%20COMMERCE-FF4B4B?style=for-the-badge&logo=shopify&logoColor=white" alt="Domain"/>  
+  </p>  
+</div>  📌 Project Overview
 
-<p align="center">
-  <img src="ICONS/prism_insurance_logo.png" alt="Prism Insurance Logo" width="280"/>
-</p><h1 align="center">📊 Prism Insurance Analysis Dashboard</h1><p align="center">
-  <b>Transforming Insurance Data into Actionable Business Insights 🚀</b>
-</p><p align="center">
-  <img src="https://img.shields.io/badge/TOOL-POWER%20BI-F2C94C?style=for-the-badge&logo=powerbi&logoColor=black" alt="Power BI"/>
-  <img src="https://img.shields.io/badge/DATABASE-SQL%20SERVER-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" alt="Microsoft SQL Server"/>
-  <img src="https://img.shields.io/badge/LANGUAGE-DAX%20%7C%20POWER%20QUERY-00B4D8?style=for-the-badge&logo=microsoft&logoColor=white" alt="DAX and Power Query"/>
-  <img src="https://img.shields.io/badge/PROJECT-DATA%20ANALYTICS-54B226?style=for-the-badge" alt="Data Analytics"/>
-</p><p align="center">
-  <img src="https://img.shields.io/badge/DOMAIN-INSURANCE%20ANALYTICS-243B55?style=for-the-badge&logo=shield&logoColor=white" alt="Insurance Analytics"/>
-  <img src="https://img.shields.io/badge/LEARNING-UDEMY%20BOOTCAMP-A435F0?style=for-the-badge&logo=udemy&logoColor=white" alt="Udemy Bootcamp"/>
-</p>---
+This project is a Blinkit Sales Analysis Power BI Project developed using Microsoft Power BI.
+The analysis explores Blinkit's grocery sales data to answer key business questions related to sales performance, outlet establishment, outlet size, outlet location, item types, fat content, and customer ratings.
 
-📌 Project Overview
-
-Prism Insurance Analysis is a data analytics project developed as part of my learning journey through the Complete Data Analyst Bootcamp: From Basic to Advanced on Udemy.
-
-The project focuses on analyzing insurance data to understand premium performance, policy coverage, claim amounts, claim status, and customer demographics.
-
-Using Microsoft SQL Server for data retrieval and Microsoft Power BI for interactive reporting, this project transforms raw data into meaningful business insights and actionable recommendations.
-
-The dashboard helps explore insurance performance, identify claim management opportunities, and support data-driven decision-making.
-
----
+The project demonstrates how Power BI can be used to transform raw grocery data into meaningful analytical insights and actionable business recommendations.
 
 🎯 Project Objectives
 
 The main objectives of this project are to:
 
-- 💰 Analyze total premium and total coverage.
-- 📋 Evaluate total claim amounts and claim status distribution.
-- 🛡️ Compare insurance performance across different policy types.
-- 👥 Analyze customer demographics by age and gender.
-- 🔎 Identify missing values and data quality issues.
-- 📊 Develop meaningful KPIs for insurance performance monitoring.
-- 💡 Generate actionable business recommendations.
-- 🗄️ Retrieve and explore insurance data using Microsoft SQL Server.
+- 🛒 Analyze Total Sales and Average Sales
+- 📦 Count Number of Items and Average Rating
+- 🥑 Analyze sales by Item Fat Content
+- 🍎 Identify top Item Types
+- 🏪 Analyze sales by Outlet Size and Outlet Location
+- 📅 Track Outlet Establishment trends over years
+- 🏬 Compare Outlet Types on sales, items, ratings, and visibility
+- 👁️ Evaluate Item Visibility as an operational KPI
+- 💡 Generate actionable business recommendations
+
 
 ---
 
 📁 Dataset Information
 
-Attribute| Details
-📊 Dataset| Prism Insurance Data
-🗄️ Data Retrieval| Microsoft SQL Server
-📈 Visualization Tool| Microsoft Power BI
-💻 Query Language| SQL
-🔄 Transformation| Power Query
-📐 Calculations| DAX
-🏢 Domain| Insurance Analytics
-🎯 Analysis Type| Exploratory & Business Analysis
+Attribute	Details
+
+🛒 Dataset	BlinkIT Grocery Data
+🗄️ Database	Power BI (PBIX)
+💻 Language	DAX / Power Query
+📊 Analysis Type	Exploratory & Business Analysis
+📌 Total Problems	10+ Business Insights
+🌍 Domain	Retail / Grocery / Quick Commerce
+🛠️ Tool	Microsoft Power BI Desktop
+
+
 
 ---
 
-🖥️ Dashboard Preview
+🗂️ Data Model & Analytical Structure
 
-<p align="center">
-  <img src="Final_Dashboard.jpg" alt="Prism Insurance Analysis Power BI Dashboard" width="100%"/>
-</p><p align="center">
-  <i>📊 Prism Insurance — Interactive Business Intelligence Dashboard</i>
-</p>«📸 Dashboard screenshot: Upload your actual Power BI dashboard screenshot to the repository root as "Final_Dashboard.jpg", or change the image path above to match your screenshot's filename.»
+The PBIX definition shows a central BlinkIT Grocery Data entity plus a Metrics field-parameter structure used to switch KPI views.
 
----
+Area	Fields / Role
 
-📊 KPI Framework
+Core Entity	BlinkIT Grocery Data
+Metric Selector	Metrics
+Sales Measures	Total Sales, Avg Sales
+Volume / Assortment	No Of Items
+Customer Signal	Avg Rating
+Product Dimensions	Item Type, Item Fat Content
+Outlet Dimensions	Outlet Type, Outlet Size, Outlet Location Type, Outlet Establishment Year
+Operational Field	Item Visibility
 
-The dashboard summarizes key insurance metrics to provide a quick overview of business performance.
 
-KPI| Dashboard Value| Business Purpose
-💰 Total Premium| 5.98M| Understand premium volume
-🛡️ Total Coverage| 600.55M| Evaluate total policy coverage
-📋 Total Claim Amount| 16.91M| Monitor claim amounts
-
-<p align="center">
-  <img src="https://img.shields.io/badge/TOTAL%20PREMIUM-5.98M-00C9A7?style=for-the-badge&labelColor=141E30" alt="Total Premium"/>
-  <img src="https://img.shields.io/badge/TOTAL%20COVERAGE-600.55M-4472C4?style=for-the-badge&labelColor=141E30" alt="Total Coverage"/>
-  <img src="https://img.shields.io/badge/CLAIM%20AMOUNT-16.91M-E67E22?style=for-the-badge&labelColor=141E30" alt="Claim Amount"/>
-</p>Note: Values are in the dataset's source units. The currency was not explicitly specified.
-
----
-
-🔍 Business Analysis
-
-1️⃣ Insurance Premium Analysis
-
-Business Question: Which insurance policy types contribute the most to total premium?
-
-Analysis Areas:
-
-- Compare premiums across Travel, Health, Auto, Life, and Home insurance.
-- Identify policy types with higher premium contributions.
-- Understand how premium volume is distributed across the insurance portfolio.
-
-Premium by Policy Type:
-
-Policy Type| Total Premium
-✈️ Travel| 2.48M
-🏥 Health| 1.20M
-🚗 Auto| 0.96M
-❤️ Life| 0.73M
-🏠 Home| 0.60M
-
-Key Observation: Travel insurance contributed the highest premium among the policy types analyzed.
-
-Follow-up Question: How do claim amounts and claim outcomes compare across these policy types?
-
----
-
-2️⃣ Claim Status Analysis
-
-Business Question: How are claims distributed across different processing outcomes?
-
-Claim Status Distribution:
-
-Claim Status| Number of Records
-✅ Settled| 3,386
-⏳ Pending| 2,263
-❌ Rejected| 4,355
-
-Analysis Areas:
-
-- Compare settled, pending, and rejected claim records.
-- Identify opportunities to improve pending-claim monitoring.
-- Investigate rejection reasons where supporting data is available.
-- Review missing claim dates and zero claim amounts before drawing conclusions.
-
-Key Observation: Rejected claims represent a substantial share of the recorded claim statuses, making rejection-reason analysis an important follow-up opportunity.
-
-«A rejection count alone does not explain why claims were rejected. Additional reason codes or claim-level details would be needed to investigate the causes.»
-
----
-
-3️⃣ Claim Amount Analysis
-
-Business Question: What is the total claim amount represented in the dataset?
-
-Metric| Value
-Total Claim Amount| 16.91M
-Settled Claim Amount| 10.11M
-Pending Claim Amount| 6.81M
-Rejected Claim Amount| 0
-
-Interpretation: Settled and pending records account for the recorded claim amounts in this dataset. Rejected records have zero claim amounts, so these values should be interpreted in the context of the source data and its claim-recording rules.
-
-Further Analysis:
-
-- Compare claim amounts across policy types.
-- Analyze pending claim ageing.
-- Investigate claim outcomes over time.
-- Validate claim amount and claim date completeness.
-
----
-
-4️⃣ Customer Demographic Analysis
-
-Business Question: How is the insurance customer base distributed across age groups and gender?
-
-Analysis Areas:
-
-- Customer distribution by gender.
-- Claim amounts by age group.
-- Comparison of younger, adult, and older customer groups.
-- Identification of demographic patterns that may warrant further investigation.
-
-Claim Amount by Age Group:
-
-Age Group| Claim Amount
-Young Adults (≤30)| 3.04M
-Adults (31–60)| 7.48M
-Older Adults (>60)| 6.39M
-
-Key Observation: Adults aged 31–60 account for the largest claim amount among these age groups in the dataset.
-
-These are descriptive findings, not evidence that age or gender causes differences in claim amounts.
-
----
-
-🧠 SQL Server Analysis
-
-Microsoft SQL Server was used to retrieve and explore the insurance dataset before visualization and reporting.
-
-🔹 SQL Skills Applied
-
-- Data retrieval using "SELECT".
-- Filtering records using "WHERE".
-- Aggregating values using "SUM()" and "COUNT()".
-- Grouping data using "GROUP BY".
-- Comparing policy types and claim statuses.
-- Exploring data quality and missing values.
-
-🔹 Example SQL Query
-
-SELECT
-    PolicyType,
-    SUM(PremiumAmount) AS TotalPremium,
-    SUM(CoverageAmount) AS TotalCoverage,
-    SUM(ClaimAmount) AS TotalClaimAmount
-FROM InsuranceData
-GROUP BY PolicyType
-ORDER BY TotalPremium DESC;
-
-Note: This is an illustrative query. Replace table and column names with the exact names in your SQL Server database.
-
-🔹 Claim Status Summary Example
-
-SELECT
-    ClaimStatus,
-    COUNT(*) AS TotalRecords,
-    SUM(ClaimAmount) AS TotalClaimAmount
-FROM InsuranceData
-GROUP BY ClaimStatus
-ORDER BY TotalRecords DESC;
 
 ---
 
 🛠️ Tools & Technologies
 
-Technology| Purpose
-🗄️ Microsoft SQL Server| Data retrieval and SQL queries
-📊 Microsoft Power BI| Interactive dashboard development
-🔄 Power Query| Data transformation and preparation
-📐 DAX| KPI development and analytical calculations
-📈 Data Visualization| Presenting patterns and business metrics
-💡 Business Analysis| Interpreting findings and recommendations
+- 📊 Microsoft Power BI
+- 💻 DAX (Data Analysis Expressions)
+- 🔄 Power Query
+- 📈 Data Modeling
+- 📉 Interactive Visualizations
+- 🎛️ Field Parameters
+- 📋 KPI Cards & Slicers
+
+
+---
+
+📊 KPI Framework
+
+The dashboard uses a compact KPI layer so users can switch the analytical lens without rebuilding the page.
+
+KPI	Dashboard Value	Business Question
+
+Total Sales	$1.20M	How much revenue is represented in the current view?
+Avg Sales	$141	What is the average sales value per transaction?
+No. of Items	8,523	How much item-level volume is represented?
+Avg Rating	3.9	What is the overall customer rating signal?
+
+
+
+---
+
+📈 Business Analysis
+
+1️⃣ Product & Sales-Mix Analysis
+
+Question: Where are sales concentrated by fat content and item type?
+
+Concepts: Donut Chart, Bar Chart, Sales Share
+
+Fat Content	Sales	Share
+
+Low Fat	$425.36K	35.4%
+Regular	$776.32K	64.6%
+
+
+Top Item Types:
+
+Item Type	Sales
+
+Fruits & Vegetables	$0.18M
+Snack Foods	$0.18M
+Household	$0.14M
+Frozen Foods	$0.12M
+Dairy	$0.10M
+Canned	$0.09M
+Baking Goods	$0.08M
+Health & Hygiene	$0.07M
+Meat	$0.06M
+Soft Drinks	$0.06M
+
+
+Reading the result: Regular-fat products account for the larger share of displayed sales, while Fruits & Vegetables and Snack Foods lead the item-type ranking at roughly $0.18M each.
+
+Follow-up question: Are high-sales categories also delivering stronger ratings, item visibility and average sales, or is revenue concentration masking an operational opportunity?
+
+
+---
+
+2️⃣ Outlet Size, Location & Establishment Analysis
+
+Question: What is the geographic and format context behind the sales total?
+
+Concepts: Donut Chart, Funnel Chart, Line Chart, Segmentation
+
+Segment	Sales	Share
+
+Small	$248.99K	20.7%
+Medium	$507.90K	42.3%
+High	$444.79K	37.0%
+
+
+Location Tier	Sales	Share
+
+Tier 1	$336.40K	28.0%
+Tier 2	$393.15K	32.7%
+Tier 3	$472.13K	39.3%
+
+
+Establishment Trend: The line chart shows a visible peak around 2018 (~$205K), with lower values before and after the peak.
+
+Interpretation: Medium outlets are the largest displayed size segment, while Tier 3 locations contribute the largest location-tier share.
+
+
+---
+
+3️⃣ Outlet-Type Performance
+
+Question: How do different outlet types perform across multiple KPIs?
+
+Concepts: Matrix / Pivot Table, Multi-metric Comparison
+
+Outlet Type	Total Sales	No. Items	Avg Sales	Avg Rating	Item Visibility
+
+Grocery Store	$151.94K	1,083	$140	4.00	0.10
+Supermarket Type1	$787.55K	5,577	$141	4.00	0.06
+Supermarket Type2	$131.48K	928	$142	4.00	0.06
+Supermarket Type3	$130.71K	935	$140	4.00	0.06
+
+
+Key Observation: Supermarket Type1 is the dominant displayed outlet format at approximately $787.55K (65.5%) of the shown sales mix.
+
+Operational Lens: The matrix is particularly useful because the same outlet can be assessed on revenue, assortment volume, average sales, customer rating and item visibility instead of sales alone.
+
+
+---
+
+🧠 DAX & Power BI Concepts Used
+
+🔹 Basic Power BI
+
+- KPI Cards
+- Slicers
+- Donut Charts
+- Bar Charts
+- Line Charts
+- Funnel Charts
+- Matrix / Pivot Tables
+
+🔹 Advanced Power BI
+
+- Field Parameters
+- Metric Selector
+- DAX Measures
+- Calculated Columns
+- Data Modeling
+- Interactive Filters
+- Cross-Filtering
+
+🔹 DAX Functions
+
+- SUM()
+- AVERAGE()
+- COUNT()
+- DIVIDE()
+- CALCULATE()
+- FILTER()
+- ALL()
+- SWITCH()
+
 
 ---
 
 📈 Analysis Areas
 
-Area| Analysis
-💰 Premium| Total premium and policy type comparison
-🛡️ Coverage| Total insurance coverage
-📋 Claims| Total claim amounts
-⏳ Claim Status| Settled, pending, and rejected records
-👥 Demographics| Customer age and gender
-🧹 Data Quality| Missing dates and zero claim amounts
-📊 KPIs| Summary metrics for business monitoring
-💡 Recommendations| Claim monitoring and reporting improvements
+Area	Analysis
+
+🛒 Sales	Total Sales, Avg Sales
+📦 Volume	No. of Items
+⭐ Ratings	Average Rating
+🥑 Fat Content	Low Fat vs Regular
+🍎 Item Types	Top selling categories
+🏪 Outlet Size	Small, Medium, High
+🌍 Outlet Location	Tier 1, 2, 3
+📅 Establishment	Year-wise outlet trends
+🏬 Outlet Type	Grocery vs Supermarkets
+👁️ Visibility	Item Visibility analysis
+
+
 
 ---
 
 💡 Key Analytical Insights
 
-- ✈️ Travel insurance recorded the highest total premium among the policy types analyzed.
-- 📊 Claim status analysis highlights the need to monitor pending claims and investigate rejection reasons.
-- 💰 Claim amount analysis helps distinguish settled and pending amounts in the available records.
-- 👥 Customer segmentation provides a demographic view of recorded claim amounts.
-- 🧹 Data quality checks help identify records that need validation before reporting.
-- 🎯 KPI monitoring can help stakeholders track insurance performance more consistently.
+This project helps analysts explore:
 
----
+- 📊 Revenue concentration in regular-fat products (~64.6%)
+- 🏪 Medium outlets form the largest size segment (~42.3%)
+- 🌍 Tier 3 locations contribute the largest location-tier share (~39.3%)
+- 🏬 Supermarket Type1 dominates the outlet-format mix (~65.5%)
+- 🍎 Fruits & Vegetables and Snack Foods are the top item categories
+- 📅 2018 establishment peak at roughly $205K
+- ⭐ Average rating of 3.9 provides a service-quality benchmark
 
-🚀 Business Recommendations
-
-1. ⏳ Improve Pending Claim Monitoring
-
-Track how long claims remain pending and establish suitable processing targets.
-
-2. 🔎 Investigate Claim Rejections
-
-Capture rejection reason codes and review recurring issues to identify opportunities for process improvement.
-
-3. ✈️ Monitor Policy Type Performance
-
-Review premium contributions alongside claim amounts and claim outcomes rather than relying on premium totals alone.
-
-4. 🧹 Strengthen Data Quality
-
-Validate missing claim dates, zero claim amounts, duplicate records, and unique identifiers.
-
-5. 📊 Expand the KPI Framework
-
-Consider adding the following metrics:
-
-- Claim Settlement Rate
-- Claim Rejection Rate
-- Pending Claim Count and Amount
-- Pending Claim Ageing
-- Average Claim Amount
-- Premium-to-Claim Ratio
-
-Each KPI should be defined clearly and calculated using the appropriate claim and policy grain.
 
 ---
 
 🏗️ Dashboard Architecture & User Flow
 
-Stage| Activity| Purpose
-1️⃣| Data Retrieval| Access insurance data through SQL Server
-2️⃣| Data Preparation| Check and transform data
-3️⃣| KPI Development| Calculate key insurance metrics
-4️⃣| Visualization| Present performance through Power BI
-5️⃣| Business Analysis| Interpret patterns and claim outcomes
-6️⃣| Recommendations| Suggest improvements based on findings
+The supplied dashboard is structured as a left-to-right decision path.
 
-Analytical Workflow:
+Filter	KPI Strip	Analysis	Segmentation	Detail
 
-"SQL Server → Data Preparation → Power BI → KPI Analysis → Business Insights → Recommendations"
+Outlet Location Type	Total Sales	Fat Content	Outlet Size	Outlet Type matrix
+Outlet Size	Avg Sales	Item Type	Outlet Location	Item Visibility
+Item Type	No. of Items	Outlet Establishment		
+	Avg Rating			
+
+
+User Journey:
+
+1. Filter the business slice
+2. Read headline KPIs
+3. Identify the strongest product/outlet segments
+4. Inspect location and size patterns
+5. Validate the detailed outlet-type matrix
+6. Move from observation to action
+
 
 ---
 
 📂 Repository Structure
 
-Prism-Insurance-Analysis-PowerBi/
-│
-├── README.md
-├── ICONS/
-│   └── prism_insurance_logo.png
-├── InsuranceData.csv
-├── Prism Insurance.pbix
-└── Final_Dashboard.jpg
+Blinkit_Sales_Analysis_PowerBI/  
+│  
+├── README.md  
+├── ICONS/  
+│   └── blinkit_logo.png  
+├── BlinkIT Grocery Data.xlsx  
+├── Blinkit Analysis.pbix  
+├── Blinkit_Analysis_Project_Report.pdf  
+├── Final_Dashboard.jpg  
+└── README.md
 
-The structure above is a suggested layout. Keep only the files and folders that actually exist in your repository.
-
----
-
-🚀 How to Explore the Project
-
-1. Install Power BI Desktop on your computer.
-2. Clone or download the repository from GitHub.
-3. Open "Prism Insurance.pbix" in Power BI Desktop.
-4. Explore the report pages, visualizations, and KPI cards.
-5. Review the source data and analysis to understand the business findings.
-
-For SQL analysis, use Microsoft SQL Server with the appropriate dataset and schema.
 
 ---
 
-🎓 Learning Resource
+🚀 How to Run the Project
 
-<p align="center">
-  <img src="https://img.shields.io/badge/PLATFORM-UDEMY-A435F0?style=for-the-badge&logo=udemy&logoColor=white" alt="Udemy"/>
-</p>Course: Complete Data Analyst Bootcamp: From Basic to Advanced
-Platform: Udemy
+1️⃣ Open Power BI Desktop
 
-This project was developed as part of my practical learning journey through the course, helping me apply data retrieval, analysis, visualization, and business reporting concepts.
+Launch Microsoft Power BI Desktop on your system.
+
+2️⃣ Open the PBIX File
+
+Open Blinkit Analysis.pbix from the repository.
+
+3️⃣ Explore the Dashboard
+
+Use the Filter Panel to slice data by:
+
+- Outlet Location Type
+- Outlet Size
+- Item Type
+
+4️⃣ Switch KPIs
+
+Use the Metrics field parameter to switch between:
+
+- Total Sales
+- Avg Sales
+- No. of Items
+- Avg Rating
+
+5️⃣ Review the Results
+
+Analyze the charts, matrix, and KPI cards to understand sales patterns.
+
 
 ---
 
-🧠 Skills Demonstrated
+📄 Project Files
 
-- 🗄️ SQL Server Data Retrieval
-- 💻 SQL Queries and Aggregations
+File	Description
+
+Blinkit Analysis.pbix	Power BI dashboard file
+BlinkIT Grocery Data.xlsx	Source dataset
+Blinkit_Analysis_Project_Report.pdf	Detailed project report
+Final_Dashboard.jpg	Dashboard preview image
+ICONS/	Folder containing icons used in the dashboard
+
+
+
+---
+
+🖼️ Dashboard Preview
+
+<p align="center">  
+  <img src="Final_Dashboard.jpg" alt="Blinkit Dashboard Preview" width="100%"/>  
+</p>  Dashboard Components:
+
+- 🎛️ Filter Panel — Outlet Location Type, Outlet Size, Item Type
+- 📊 KPI Cards — Total Sales ($1.20M), Avg Sales ($141), No. of Items (8,523), Avg Rating (3.9)
+- 🍩 Donut Charts — Fat Content, Outlet Size
+- 📊 Bar Charts — Item Type, Fat by Outlet
+- 📈 Line Chart — Outlet Establishment Trend
+- 🔺 Funnel Chart — Outlet Location
+- 📋 Matrix — Outlet Type with Sales, Items, Avg Sales, Rating, Visibility
+
+
+---
+
+🎓 Skills Demonstrated
+
 - 📊 Power BI Dashboard Development
-- 🔄 Power Query Data Transformation
-- 📐 DAX and KPI Development
-- 🧹 Data Quality Validation
-- 📈 Exploratory Data Analysis
-- 💡 Business Insights and Recommendations
-- 🎯 Analytical Thinking and Data Storytelling
+- 💻 DAX Calculations & Measures
+- 🔄 Data Modeling & Relationships
+- 🎛️ Field Parameters & Metric Switching
+- 📈 Interactive Visualizations
+- 🧹 Data Cleaning & Transformation
+- 📋 KPI Design & Business Reporting
+- 💡 Analytical Thinking & Insights Generation
+
 
 ---
 
-👨‍💻 About Me
+👨‍💻 Author
 
 Manish Kashyap
+
 🎯 Aspiring Data Analyst
 📊 SQL | Excel | Python | Power BI | Data Analytics
-🤖 Artificial Intelligence & Machine Learning Enthusiast
+🤖 AI & ML Enthusiast
 
-I'm passionate about transforming raw data into meaningful insights and continuously building projects to strengthen my analytical and technical skills.
 
-<p align="center">
-  <a href="https://github.com/ilikemanish">
-    <img src="https://img.shields.io/badge/GitHub-Follow-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
-  </a>
-  <a href="https://portfolio-ci5f.vercel.app/">
-    <img src="https://img.shields.io/badge/Portfolio-Visit-00C9A7?style=for-the-badge&logo=vercel&logoColor=white" alt="Portfolio"/>
-  </a>
-</p>---
+---
 
-<p align="center">
-  ⭐ <b>If you find this project useful, consider giving the repository a star!</b>
-</p><p align="center">
-  <b>Built with SQL Server, Power BI & a passion for Data Analytics 📊</b>
-</p><p align="center">
-  <i>Turning Data into Insights. Turning Insights into Action. 🚀</i>
-</p>
+⭐ If you find this project useful, consider giving the repository a star!
+
+Built with Power BI & DAX 💛📊
+
+
+---
+
+🔗 Connect
+
+- GitHub: ilikemanish
+- Repository: Blinkit_Sales_Analysis_PowerBI
+
+
+---
+
+<p align="center">  
+  <b>🛒 Blinkit — India's Last Minute App 🛒</b><br>  
+  <i>Data-Driven Decisions for Quick Commerce</i>  
+</p>  
